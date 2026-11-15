@@ -1,0 +1,229 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Briefing: ONE paper card: a header, a body with the story, the photo, the five rules and the controls, and an
+ * always-visible footer with the "Land at the base!" button. The card never exceeds the screen; if the content is taller
+ * than the window, only the body scrolls.
+ */
+.briefing-screen {
+  grid-template-rows: minmax(0, 1fr); /* a row as tall as the screen, so the card (max-height: 100%) scrolls inside */
+  place-items: center;
+}
+.briefing {
+  --pad: clamp(12px, 2.2vmin, 22px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(1000px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: var(--r-xl);
+  font-size: clamp(1rem, 0.9rem + 0.6vmin, 1.25rem);
+}
+
+/* ---------- Header ---------- */
+.briefing-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  padding: calc(var(--pad) * 0.8) var(--pad);
+  border-bottom: var(--outline) solid var(--ink);
+  background: color-mix(in srgb, var(--energy) 28%, var(--paper));
+}
+.briefing-head h1 {
+  flex: 1 1 12ch;
+  min-width: 0;
+  font-size: var(--fs-2xl);
+  color: var(--ink);
+}
+
+/* ---------- Body ---------- */
+.briefing-body {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--pad);
+}
+.briefing-subtitle {
+  font-size: var(--fs-xl);
+  color: var(--ink);
+}
+
+/* The story and the photo side by side (stacked on narrow screens) */
+.briefing-where {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 36%);
+  gap: var(--sp-4);
+  align-items: start;
+}
+.briefing-story {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-3);
+}
+.briefing-lead {
+  max-width: 48ch;
+  font-size: var(--fs-lg);
+  line-height: 1.45;
+}
+.briefing-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--tag-live) 14%, var(--paper));
+  font-size: var(--fs-sm);
+  line-height: 1.35;
+}
+.briefing-note.is-warn {
+  display: block;
+  background: color-mix(in srgb, var(--warn) 30%, var(--paper));
+}
+.briefing-note .icon {
+  display: inline;
+  vertical-align: -5px;
+}
+.briefing-calm {
+  color: var(--ink-2);
+}
+
+.briefing-photo {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.briefing-photo-frame {
+  position: relative;
+  overflow: hidden;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-hard-sm);
+  background: var(--sky-top);
+}
+.briefing-photo-frame img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center 52%;
+}
+.briefing-photo .pin {
+  position: absolute;
+  left: 50%;
+  top: 51%;
+  transform: translate(-50%, -100%);
+  filter: drop-shadow(0 3px 3px rgb(0 0 0 / 70%));
+  animation: briefing-bob 1.2s ease-in-out infinite;
+}
+@keyframes briefing-bob {
+  50% {
+    transform: translate(-50%, calc(-100% - 6px));
+  }
+}
+.briefing-photo figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--fs-xs);
+  line-height: 1.3;
+  color: var(--ink-2);
+}
+.briefing-photo figcaption a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* a comfortable touch target for the credit link */
+}
+
+/* ---------- Rules ---------- */
+.briefing-rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--sp-3);
+}
+.briefing-rule {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  min-width: 0;
+  padding: var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-hard-sm);
+}
+.briefing-rule p {
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.rule-icon {
+  flex: none;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.briefing-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) dashed var(--ink-3);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: var(--fs-md);
+  max-width: none;
+}
+.briefing-controls .icon {
+  flex: none;
+}
+
+/* ---------- Footer ---------- */
+.briefing-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: calc(var(--pad) * 0.75) var(--pad);
+  /* useAvoidAiBadge() sets --ai-avoid-left when the footer would sit under the AI watermark */
+  padding-left: max(var(--pad), var(--ai-avoid-left, 0px));
+  border-top: var(--outline) solid var(--ink);
+  background: var(--paper-2);
+}
+
+/* ---------- Narrow screens: stack the story and the photo ---------- */
+@media (max-width: 700px) {
+  .briefing-where {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .briefing-photo-frame img {
+    aspect-ratio: 16 / 9;
+  }
+  .briefing-foot .btn:not(.btn-primary) {
+    padding-inline: 0.8em;
+  }
+}
+@media (max-height: 560px) {
+  .briefing {
+    font-size: var(--fs-md);
+  }
+  .briefing-head h1 {
+    font-size: var(--fs-xl);
+  }
+  .briefing-foot .btn-lg {
+    min-height: var(--touch);
+    font-size: var(--fs-md);
+  }
+}

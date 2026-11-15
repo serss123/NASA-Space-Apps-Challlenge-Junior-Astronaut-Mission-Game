@@ -1,0 +1,37 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* App shell: the screen transition wrapper and the loading screen. */
+
+/* Each screen enters with a short spring (<= 350 ms); under reduced motion it only fades (.rm-fade). */
+.app-screen {
+  position: fixed;
+  inset: 0;
+  animation: ss-screen-in 340ms var(--ease-spring) backwards;
+}
+@keyframes ss-screen-in {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.975);
+  }
+  55% {
+    opacity: 1;
+  }
+}
+
+.app-loading {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--screen-pad);
+  padding-bottom: max(var(--screen-pad), var(--ai-badge-h));
+}
+.app-loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+}
+.app-loading-title {
+  font-size: var(--fs-2xl);
+  text-align: center;
+}

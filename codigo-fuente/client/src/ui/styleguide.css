@@ -1,0 +1,191 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* Dev-only style guide (ui/StyleGuide.jsx): one screen, no scroll, at every target viewport. */
+.sg {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 6px;
+  padding-bottom: max(var(--screen-pad), var(--ai-badge-h));
+}
+.sg-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.sg-title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-2xl);
+}
+.sg-head-actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+.sg-tabs {
+  min-height: 0;
+}
+.sg-panel {
+  flex: 1;
+  min-height: 0;
+  padding: clamp(8px, 1.8vmin, 18px);
+  overflow: hidden;
+}
+.sg-panel.is-clear {
+  padding: 0;
+}
+.sg-panel-inner {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sg-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 12px;
+}
+.sg-note {
+  max-width: 62ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Icons */
+.sg-icon-grid {
+  --pager-min: 92px;
+  grid-auto-rows: 84px;
+}
+.sg-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 4px;
+  border: var(--outline-sm) dashed var(--ink-3);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+}
+.sg-icon figcaption {
+  max-width: 100%;
+  font-size: 13px;
+  line-height: 1.1;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* Characters */
+.sg-characters {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+.sg-suns {
+  gap: 10px clamp(12px, 4vw, 48px);
+}
+.sg-says {
+  flex: 1 1 340px;
+  max-width: 620px;
+}
+
+/* Buttons, windows and tags */
+.sg-buttons,
+.sg-modal,
+.sg-tags {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(10px, 2.4vmin, 22px);
+}
+.sg-sticker {
+  margin: 0 auto;
+  font-size: clamp(2rem, 9vmin, 4.2rem);
+}
+.sg-samples .fact-box {
+  max-width: 280px;
+}
+.sg-badge-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 420px;
+  padding: 8px 12px;
+  border: var(--outline-sm) dashed var(--ink-3);
+  border-radius: var(--r-md);
+}
+.sg-badge-arrow {
+  transform: rotate(35deg);
+}
+
+/* Pages and tabs */
+.sg-nav {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px;
+}
+.sg-nav-pager,
+.sg-nav-tabs {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sg-card-grid {
+  --pager-min: 138px;
+  grid-auto-rows: 64px;
+}
+.sg-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-hard-sm);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+.sg-tab-text {
+  padding: 12px 14px;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+}
+@media (max-width: 600px) {
+  .sg-nav {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+}
+
+/* Sky moods: the panel is transparent so the backdrop shows */
+.sg-backdrop {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 6px;
+}
+.sg-on-sky {
+  padding: 6px 14px;
+  border: var(--outline-sm) solid var(--on-dark);
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--on-dark);
+}
+
+@media (max-width: 600px), (max-height: 500px) {
+  .sg-title {
+    font-size: var(--fs-xl);
+  }
+}

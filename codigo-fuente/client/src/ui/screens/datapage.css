@@ -1,0 +1,361 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Data page: tabs, and inside each tab one scroll area (.data-list) with ALL the cards or rows laid out in columns.
+ * It fills the body of the Modal that hosts it (a flex column), so every level uses min-height: 0; the min-height on
+ * .sources is a floor for hosts that do not use <Modal fill>. Sizes are in rem (the root font size is fluid, 15-19 px).
+ */
+.sources {
+  flex: 1 1 auto;
+  min-height: min(420px, 62dvh);
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+}
+.sources-tabs {
+  flex: 1;
+  min-height: 0;
+}
+.sources-panel {
+  min-height: 0;
+}
+.sources-panel-inner {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.data-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.data-panel.is-centered {
+  align-items: center;
+  justify-content: center;
+}
+.data-list {
+  flex: 1;
+  display: grid;
+  align-content: start;
+  gap: var(--sp-3);
+  padding: 2px 4px 6px 2px;
+}
+.sources-lead {
+  flex: none;
+  font-size: var(--fs-lg);
+}
+
+/* ---------- Labels ---------- */
+.label-page {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+}
+.label-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+}
+.label-card p {
+  font-size: var(--fs-md);
+  line-height: 1.35;
+}
+
+/* ---------- Cards (sources, data to game) ---------- */
+.card-page {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+}
+.source-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-lg);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-hard-sm);
+  font-size: var(--fs-md);
+  line-height: 1.35;
+}
+.source-card header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+.source-card header strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  line-height: 1.15;
+}
+.source-provider {
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  line-height: 1.25;
+}
+.source-how {
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) dashed var(--ink-3);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+}
+.source-how .icon {
+  display: inline;
+  vertical-align: -4px;
+}
+.source-links {
+  margin-top: auto;
+  font-size: var(--fs-sm);
+}
+.source-links small {
+  color: var(--ink-2);
+  font-size: inherit;
+}
+.source-photo {
+  width: 100%;
+  height: 11rem;
+  object-fit: cover;
+  object-position: center 52%;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-sm);
+}
+.level-list,
+.plain-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.level-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.plain-list li {
+  padding-left: 1.1em;
+  position: relative;
+}
+.plain-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  font-weight: 800;
+  color: var(--science-ink);
+}
+.rad-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px 2px 6px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.rad-badge.is-level-1 {
+  background: color-mix(in srgb, var(--warn) 45%, var(--paper));
+}
+.rad-badge.is-level-2 {
+  background: color-mix(in srgb, var(--food) 70%, var(--paper));
+}
+.rad-badge.is-level-3 {
+  background: color-mix(in srgb, var(--danger) 55%, var(--paper));
+}
+
+/* ---------- Mission days ---------- */
+.days-intro {
+  flex: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+}
+.days-intro p {
+  font-size: var(--fs-sm);
+}
+.days-panel {
+  container: days / inline-size;
+}
+/* Three tiers by the width of the window: 6 columns, 4 columns (no detectors), or two lines per day */
+.days-head,
+.day-row {
+  display: grid;
+  grid-template-columns: 8.5em minmax(0, 1fr) 10.5em 4em 4.5em 4.5em;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.days-head {
+  flex: none;
+  padding: 0 calc(var(--sp-3) + var(--outline-sm)); /* the row border is inside its padding box */
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.days-page {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-2);
+}
+.day-row {
+  min-width: 0;
+  min-height: 3.6rem;
+  padding: var(--sp-1) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  font-size: var(--fs-md);
+  line-height: 1.25;
+}
+.day-rad {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.day-rad small {
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+}
+.day-num {
+  font-variant-numeric: tabular-nums;
+}
+.day-num-label {
+  display: none;
+}
+.day-link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch);
+}
+.spoiler-gate {
+  max-width: 44ch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: var(--outline) dashed var(--ink);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--energy) 22%, var(--paper));
+  text-align: center;
+  font-size: var(--fs-lg);
+}
+.data-empty {
+  font-size: var(--fs-lg);
+  text-align: center;
+}
+@container days (max-width: 899px) {
+  .days-head,
+  .day-row {
+    grid-template-columns: 8.5em minmax(0, 1fr) 10.5em 4.5em;
+  }
+  .day-num,
+  .days-head span:nth-child(4),
+  .days-head span:nth-child(5) {
+    display: none;
+  }
+}
+@container days (max-width: 639px) {
+  .days-head {
+    display: none;
+  }
+  .day-row {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'name rad link'
+      'what what what';
+    align-content: center;
+    gap: 2px var(--sp-3);
+  }
+  .day-name {
+    grid-area: name;
+  }
+  .day-rad {
+    grid-area: rad;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+  .day-link {
+    grid-area: link;
+  }
+  .day-what {
+    grid-area: what;
+  }
+  .day-num {
+    display: none;
+  }
+}
+
+/* ---------- Lists (simplified, credits) ---------- */
+.list-page {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-2);
+}
+.list-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  font-size: var(--fs-md);
+  line-height: 1.3;
+}
+.list-row p {
+  max-width: none;
+}
+.list-row > .icon {
+  --icon-color: var(--science);
+}
+
+/* ---------- About ---------- */
+.about-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  align-content: start;
+  gap: var(--sp-3);
+  overflow-y: auto;
+  padding: 2px 4px 6px 2px;
+}
+.about-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-lg);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-hard-sm);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.about-card h3 {
+  font-size: var(--fs-lg);
+}
+.about-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  padding: 6px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+}

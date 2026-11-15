@@ -1,0 +1,187 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Sol a Sol v2 design tokens: "Cartoon Lunar Outpost" (docs/DESIGN.md section 2.1).
+ * Every stylesheet uses these variables. Colour is never the only signal: pair it with an icon or a word.
+ */
+:root {
+  /* Ink and paper: ink is the outline and the text colour on light surfaces */
+  --ink: #1b1036;
+  --ink-2: #3b2d63;
+  --ink-3: #6b5f8e;
+  --paper: #fff7e8;
+  --paper-2: #ffeccc;
+  --paper-3: #f5dfb8;
+  --on-dark: #fff7e8;
+  --on-dark-dim: #d8ccff;
+
+  /* Sky */
+  --sky-top: #170b3b;
+  --sky-mid: #2d1466;
+  --sky-low: #5b1f7a;
+  --horizon: #ff8a5b;
+  --storm-tint: #ff3d6e;
+  --aurora-1: #3df5c5;
+  --aurora-2: #7c5cff;
+
+  /* Moon ground */
+  --moon-hi: #ece6f7;
+  --moon: #c9bfdf;
+  --moon-lo: #9a8dbb;
+  --moon-shadow: #5e4f86;
+
+  /* Resources */
+  --heart: #ff3f6c;
+  --energy: #ffc93c;
+  --stamina: #2fd38a;
+  --food: #ff9a3c;
+  --ice: #6fd8ff;
+  --metal: #a9b8d1;
+  --sample: #d79b62;
+  --science: #8a5cff;
+
+  /* Buildings */
+  --life: #3fa7ff;
+  --farm: #45cf63;
+  --antenna: #19c2b0;
+  --shield: #2fc4ff;
+  --rover: #ff7a33;
+  --bed: #ff6fb5;
+
+  /* States */
+  --ok: #2fd38a;
+  --warn: #ffb020;
+  --danger: #ff3f5c;
+  --info: #3fa7ff;
+
+  /* Data tags */
+  --tag-live: #ff3f5c;
+  --tag-archive: #ffb703;
+  --tag-sim: #9b5de5;
+  --tag-calc: #00b8a9;
+  --tag-design: #6b5f8e;
+  --tag-nasa: #3fa7ff;
+
+  /* Shape */
+  --outline: 3px;
+  --outline-sm: 2px;
+  --r-xl: 28px;
+  --r-lg: 22px;
+  --r-md: 16px;
+  --r-sm: 12px;
+  --r-pill: 999px;
+  --shadow-hard: 0 6px 0 var(--ink);
+  --shadow-hard-sm: 0 4px 0 var(--ink);
+  --shadow-soft: 0 18px 40px rgb(10 4 30 / 45%);
+
+  /* Motion */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur: 260ms;
+  --dur-slow: 480ms;
+
+  /* Layers */
+  --z-backdrop: 0;
+  --z-map: 1;
+  --z-hud: 20;
+  --z-toast: 60;
+  --z-modal: 80;
+  --z-popover: 120;
+  --z-badge: 140;
+
+  /* ---- Extras (v2 foundation): documented in docs/DESIGN.md section 10 ---- */
+
+  /* Type: Fredoka for display, Nunito for body and UI */
+  --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Fluid root size: 15 px on phones, about 17 px on a 1366x768 laptop, 19 px on big screens. */
+  --fs-root: clamp(15px, 0.5vw + 0.5vh + 6.5px, 19px);
+  --fs-xs: max(13px, 0.8rem); /* tags and captions: never below 13 px */
+  --fs-sm: max(14px, 0.9rem);
+  --fs-md: 1rem;
+  --fs-lg: 1.2rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: clamp(1.6rem, 1.1rem + 1.6vmin, 2.4rem);
+  --fs-hero: clamp(2.3rem, 1.3rem + 4.2vmin, 4.4rem);
+
+  /* Spacing and touch */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --touch: 48px; /* minimum touch target */
+  --screen-pad: clamp(8px, 2.2vmin, 24px);
+
+  /* Darker shades for text and lines on paper (WCAG AA on --paper) */
+  --science-ink: #5b2fd6;
+  --link-ink: #2353c4;
+  --danger-ink: #c41d3f;
+  --ok-ink: #0f7a4c;
+
+  /* Contextual colours: dark sky by default; paper surfaces switch them (see base.css) */
+  --fg: var(--on-dark);
+  --fg-dim: var(--on-dark-dim);
+  --focus-ring: var(--aurora-1);
+  --term-color: var(--aurora-1);
+  --link-color: #a9ecff;
+
+  /* The AI watermark corner (AiBadge). Screens reserve it with these sizes or the .ai-safe-* classes. */
+  --ai-badge-gap: 10px;
+  --ai-badge-w: 168px; /* gap + badge width + gap */
+  --ai-badge-h: 60px; /* gap + badge height + gap */
+}
+
+/* Compact mode (phones): the badge is icon-only. Same query as COMPACT_QUERY in ui/components/hooks.js. */
+@media (max-width: 600px), (max-height: 500px) {
+  :root {
+    --ai-badge-gap: 8px;
+    --ai-badge-w: 58px;
+    --ai-badge-h: 58px;
+  }
+}
+
+/* ======================================================================
+ * LEGACY (remove after v2)
+ * Old v1 names still used by screens that are not redesigned yet.
+ * Names that collide with v2 tokens are NOT kept here: they take the new value
+ * (for example --ink is now dark ink, and --energy, --shield... use the new palette).
+ * ====================================================================== */
+:root {
+  --space-0: #050816;
+  --space-1: #0a1024;
+  --space-2: #111a36;
+  --panel: #141d3b;
+  --panel-2: #1b2650;
+  --panel-3: #24316a;
+  --line: #2f3f78;
+  --line-soft: rgba(143, 167, 255, 0.18);
+  --ink-dim: #b4c0e4;
+  --ink-faint: #7f8bb3;
+  --health: var(--heart);
+  --energy-deep: #d99a00;
+  --ok-deep: #1f9d57;
+  --warn-deep: #c27c00;
+  --danger-deep: #b8202f;
+  --info-deep: #2560c2;
+  --radius-xl: var(--r-xl);
+  --radius-lg: var(--r-lg);
+  --radius-md: var(--r-md);
+  --radius-sm: var(--r-sm);
+  --press: 0 6px 0 rgba(0, 0, 0, 0.45);
+  --press-sm: 0 4px 0 rgba(0, 0, 0, 0.45);
+  --glow: 0 0 24px rgba(90, 176, 255, 0.35);
+  --shadow-pop: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+/* LEGACY: v1 secondary text was light; inside v2 paper surfaces it must be dark to stay readable. */
+.paper,
+.on-paper,
+.modal,
+.popover {
+  --ink-dim: var(--ink-2);
+  --ink-faint: var(--ink-3);
+  --line: var(--ink-3);
+  --line-soft: rgb(27 16 54 / 18%);
+}
+/* ====================== end of LEGACY ====================== */

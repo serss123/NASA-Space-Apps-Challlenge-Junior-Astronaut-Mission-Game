@@ -1,0 +1,209 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Night report and final report: paper Modals (ink text, cream blocks with an ink outline). Blocks sit in columns when the
+ * window is wide and stack when it is narrow. If everything is too tall, the Modal body scrolls; the footer buttons stay.
+ */
+.health-change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  font-family: var(--font-display);
+}
+.health-change > span {
+  display: inline-flex;
+  gap: 2px;
+}
+.health-change .heart {
+  --icon-color: var(--heart);
+}
+
+.report-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  align-items: start;
+  gap: var(--sp-3);
+}
+.report-wide {
+  grid-column: 1 / -1;
+}
+.report-block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.report-block > h3 {
+  font-size: var(--fs-lg);
+}
+.report-block.real-data > .real-data-head h3 {
+  font-size: var(--fs-lg);
+}
+.report-block.tone-alert {
+  padding: var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--danger) 16%, var(--paper));
+}
+.report-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+.report-level {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.report-level small {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+.report-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.report-list li {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  font-size: var(--fs-md);
+  line-height: 1.35;
+}
+.report-list li.good {
+  background: color-mix(in srgb, var(--ok) 22%, var(--paper));
+}
+.report-list li.bad {
+  background: color-mix(in srgb, var(--danger) 18%, var(--paper));
+}
+.report-list li.info {
+  background: color-mix(in srgb, var(--info) 16%, var(--paper));
+}
+.report-list .ri {
+  flex: none;
+  display: grid;
+}
+
+.mini-discoveries {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--sp-2);
+}
+.mini-discovery {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--science) 12%, var(--paper));
+}
+.mini-discovery strong {
+  font-family: var(--font-display);
+}
+
+/* ---------- Final report ---------- */
+.final-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  text-align: center;
+}
+.final-hero h2 {
+  font-size: var(--fs-2xl);
+}
+.final-hero p {
+  font-size: var(--fs-lg);
+  color: var(--ink-2);
+}
+.final-hero .big-emoji {
+  font-size: 3.4rem;
+  line-height: 1;
+  animation: report-float 3s ease-in-out infinite;
+}
+@keyframes report-float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.comic {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--sp-4);
+  padding-top: var(--sp-2);
+}
+.comic-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-3) var(--sp-3);
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-lg);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-hard-sm);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.comic-panel .comic-n {
+  position: absolute;
+  top: -16px;
+  left: 14px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: var(--energy);
+  font-family: var(--font-display);
+  font-weight: 700;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.comic-panel h3 {
+  font-size: var(--fs-md);
+  color: var(--science-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.comic-panel .comic-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--sp-2);
+}
+.stat {
+  padding: var(--sp-2);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  text-align: center;
+}
+.stat strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+}
+.stat span {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}

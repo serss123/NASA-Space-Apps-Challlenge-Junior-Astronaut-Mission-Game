@@ -1,0 +1,105 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* <Pager>: give it a definite height (for example flex: 1 inside a column) so it can work out what fits. */
+.pager {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+.pager.is-sides {
+  flex-direction: row;
+  align-items: center;
+}
+.pager-middle {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pager-view {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.pager-page {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--pager-min, 180px), 1fr));
+  gap: var(--pager-gap, 12px);
+  align-content: start;
+  height: 100%;
+  outline: none;
+  animation: ss-slide-in-right 280ms var(--ease-out) both;
+}
+.pager-page[data-dir='-1'] {
+  animation-name: ss-slide-in-left;
+}
+.pager-page[data-dir='0'] {
+  animation: none;
+}
+.pager-controls {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 24px;
+}
+.pager.is-sides .pager-controls {
+  min-height: 24px;
+}
+.pager-arrow.btn {
+  flex: none;
+}
+.pager-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.pager-dot {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper-3);
+  box-shadow: 0 2px 0 var(--ink);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+.pager-dot::after {
+  content: '';
+  position: absolute;
+  inset: -9px -5px;
+}
+.pager-dot[aria-current='page'] {
+  background: var(--energy);
+  transform: scale(1.25);
+}
+.pager-count {
+  min-width: 4.5em;
+  padding: 4px 12px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pager-page {
+    animation: ss-fade-in 120ms ease-out both !important;
+  }
+}
+html.reduced-motion .pager-page {
+  animation: ss-fade-in 120ms ease-out both !important;
+}

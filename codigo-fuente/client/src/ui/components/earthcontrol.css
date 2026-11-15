@@ -1,0 +1,142 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* <EarthControl> avatar and <ControlSays> speech bubble. */
+.earth-control {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+.earth-control .ec-head {
+  transform-origin: 50px 54px;
+  animation: ec-bob 3.2s ease-in-out infinite;
+}
+.earth-control .ec-mouth-open {
+  opacity: 0;
+}
+.earth-control.is-talking .ec-mouth-open {
+  animation: ec-talk 0.36s steps(1) infinite;
+}
+.earth-control.is-talking .ec-mouth-closed {
+  animation: ec-talk 0.36s steps(1) infinite reverse;
+}
+.earth-control .ec-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ec-blink 5s ease-in-out infinite;
+}
+@keyframes ec-bob {
+  50% {
+    transform: translateY(-2px) rotate(-2deg);
+  }
+}
+@keyframes ec-talk {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes ec-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+.control-says {
+  --says-tone: var(--life);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.control-says.tone-ok {
+  --says-tone: var(--ok);
+}
+.control-says.tone-warn {
+  --says-tone: var(--warn);
+}
+.control-says.tone-alert {
+  --says-tone: var(--danger);
+}
+.control-says.tone-night {
+  --says-tone: var(--bed);
+}
+.control-says-bubble {
+  --fg: var(--ink);
+  --fg-dim: var(--ink-2);
+  --focus-ring: var(--science-ink);
+  --term-color: var(--science-ink);
+  --link-color: var(--link-ink);
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px 8px 14px;
+  border: var(--outline) solid var(--ink);
+  border-left-width: 8px;
+  border-left-color: var(--says-tone);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+}
+/* the tail points at the avatar */
+.control-says-bubble::before {
+  content: '';
+  position: absolute;
+  left: -15px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  background: var(--says-tone);
+  border: var(--outline) solid var(--ink);
+  border-right: 0;
+  border-top: 0;
+  transform: rotate(45deg);
+}
+.control-says:not(:has(.earth-control)) .control-says-bubble::before {
+  display: none;
+}
+.control-says-copy {
+  flex: 1;
+  min-width: 0;
+}
+.control-says-kicker {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-xs);
+  color: var(--ink-2);
+  letter-spacing: 0.03em;
+}
+.control-says-text {
+  font-weight: 800;
+  line-height: 1.3;
+}
+.control-says-action {
+  flex: none;
+}
+
+@media (max-width: 600px), (max-height: 500px) {
+  .control-says-bubble {
+    padding: 6px 8px 6px 10px;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .earth-control * {
+    animation: none !important;
+  }
+}
+html.reduced-motion .earth-control * {
+  animation: none !important;
+}

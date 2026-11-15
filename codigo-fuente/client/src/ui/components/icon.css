@@ -1,0 +1,8 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* <Icon>: inline SVG that sits on the text baseline and never shrinks inside flex rows. */
+.icon {
+  display: inline-block;
+  flex: none;
+  vertical-align: -0.22em;
+  overflow: visible;
+}

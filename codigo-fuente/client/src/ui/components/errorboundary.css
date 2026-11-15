@@ -1,0 +1,32 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* <ErrorBoundary>: a friendly card on the sky when the interface fails. */
+.error-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--screen-pad);
+  padding-bottom: max(var(--screen-pad), var(--ai-badge-h));
+}
+.error-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  width: min(520px, 100%);
+  padding: clamp(16px, 4vmin, 32px);
+  text-align: center;
+}
+.error-card h1 {
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+}
+.error-art {
+  position: relative;
+  display: inline-block;
+}
+.error-art-badge {
+  position: absolute;
+  right: -8px;
+  bottom: -4px;
+}

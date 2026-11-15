@@ -1,0 +1,40 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Game screen: a fixed grid that never scrolls. The animated sky is drawn once by <BackdropProvider>, so no background here.
+ *   portrait / squarish   HUD · ticker · map · Mission Control bar
+ *   wide (>= 3:2)         HUD and ticker on top, the map and a Mission Control column side by side
+ * The map takes the space that is left and scales itself to it (a size container, see basemap.css).
+ */
+.game {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+.game > .hud,
+.game > .ticker {
+  grid-column: 1 / -1;
+}
+
+@media (min-aspect-ratio: 3/2) {
+  .game {
+    --mc-w: clamp(15rem, 25vw, 22rem);
+    grid-template-columns: minmax(0, 1fr) var(--mc-w);
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+  .game > .basemap {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .game > .mc {
+    grid-column: 2;
+    grid-row: 3;
+  }
+}
+
+/* The "New discovery!" window uses the Journal card as it is: it only needs a little air around it */
+.discovery-modal .disc-card {
+  box-shadow: none;
+}

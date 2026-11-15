@@ -1,0 +1,251 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Base styles for every screen (docs/DESIGN.md sections 2 and 3).
+ * The page itself never scrolls: html, body and #root fill the viewport with overflow hidden, and every screen lays
+ * itself out inside 100dvh, aiming to show everything in one view. Where it does not fit, a screen or a list scrolls
+ * inside (.scroll-y, modal bodies): scroll is the safety net, never cut or hide content.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+html {
+  font-size: var(--fs-root);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  position: fixed; /* stops iOS rubber-band scrolling of the page */
+  inset: 0;
+  background: var(--sky-top);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  margin: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--link-color);
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+strong,
+b {
+  font-weight: 800;
+}
+
+::selection {
+  background: rgb(255 201 60 / 45%);
+  color: var(--ink);
+}
+
+/* Thick focus ring that shows on the dark sky and on paper (the colour switches with the surface). */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 4px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* Paper surfaces: cream stickers with a thick ink outline and a hard ink shadow. Text on them is dark ink. */
+.paper,
+.on-paper,
+.modal,
+.popover {
+  --fg: var(--ink);
+  --fg-dim: var(--ink-2);
+  --focus-ring: var(--science-ink);
+  --term-color: var(--science-ink);
+  --link-color: var(--link-ink);
+  color: var(--fg);
+}
+.paper {
+  background: var(--paper);
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-hard);
+}
+.paper-2 {
+  background: var(--paper-2);
+}
+
+/* Big "sticker" titles: light fill, thick ink stroke painted behind the fill, hard ink shadow. */
+.sticker-title {
+  --sticker-fill: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--sticker-fill);
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  -webkit-text-stroke: 0.16em var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0 0.1em 0 var(--ink);
+}
+.sticker-title.is-sun {
+  --sticker-fill: var(--energy);
+}
+
+/* Secondary text that adapts to the surface (dim lilac on the sky, ink-2 on paper). */
+.muted {
+  color: var(--fg-dim);
+}
+
+/* A "Did you know?" box (used by reports, panels and minigames). */
+.fact-box {
+  position: relative;
+  padding: 10px 14px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: #e4f6ff;
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.4;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+/* Only for screen readers. */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* A vertical scroll area: the safety net when a list or a page does not fit one view. */
+.scroll-y {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* A full screen: the page never scrolls, the screen scrolls inside when it must: a grid that fills the viewport inside the safe area. */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* content never widens the screen */
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: max(var(--screen-pad), env(safe-area-inset-top)) max(var(--screen-pad), env(safe-area-inset-right))
+    max(var(--screen-pad), env(safe-area-inset-bottom)) max(var(--screen-pad), env(safe-area-inset-left));
+}
+
+/* Keep clear of the AI watermark corner (bottom-left). */
+.ai-safe-left {
+  padding-left: max(var(--ai-badge-w), env(safe-area-inset-left));
+}
+.ai-safe-bottom {
+  padding-bottom: max(var(--ai-badge-h), env(safe-area-inset-bottom));
+}
+
+/* ---------- Compact mode (phones: width <= 600 px or height <= 500 px) ----------
+ * Same query as COMPACT_QUERY in ui/components/hooks.js (useCompact()).
+ * .hide-compact disappears on phones; .only-compact shows only on phones. */
+@media (max-width: 600px), (max-height: 500px) {
+  .hide-compact {
+    display: none !important;
+  }
+}
+@media (min-width: 601px) and (min-height: 501px) {
+  .only-compact {
+    display: none !important;
+  }
+}
+
+/* ---------- Reduced motion ----------
+ * Both the system setting and the in-game "Reduce motion" switch (class .reduced-motion on <html>)
+ * stop every ambient loop. Components that need a short fade (<= 120 ms) opt in with .rm-fade. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rm-fade {
+    animation: ss-fade-in 120ms ease-out both !important;
+  }
+}
+html.reduced-motion *,
+html.reduced-motion *::before,
+html.reduced-motion *::after {
+  animation-duration: 1ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+  transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
+}
+html.reduced-motion .rm-fade {
+  animation: ss-fade-in 120ms ease-out both !important;
+}

@@ -1,0 +1,601 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Module panels. They are Modals (paper): ink text, cream blocks with an ink outline. One page per panel: every section
+ * sits under its own heading, in columns when the window is wide; if it does not all fit, the Modal body scrolls.
+ */
+/* The window is as tall as its content (up to the viewport); past that, the Modal body scrolls. */
+.panel-modal .modal-body {
+  padding-top: var(--sp-2);
+}
+.panel-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.panel-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.panel-group-title {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding-bottom: 2px;
+  border-bottom: var(--outline-sm) dashed var(--ink-3);
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+.panel-group-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5em;
+  padding: 0 6px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--danger);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+.panel-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  align-content: start;
+  gap: var(--sp-3);
+}
+.panel-wide {
+  grid-column: 1 / -1;
+}
+.panel-intro {
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.panel-section {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.panel-section h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+.panel-section.tone-alert {
+  background: color-mix(in srgb, var(--danger) 16%, var(--paper));
+}
+.panel-section.tone-ok {
+  background: color-mix(in srgb, var(--ok) 20%, var(--paper));
+}
+.panel-section.tone-warn {
+  background: color-mix(in srgb, var(--warn) 26%, var(--paper));
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+.action-reason,
+.action-warn {
+  font-size: var(--fs-sm);
+  line-height: 1.3;
+}
+.action-reason {
+  color: var(--danger-ink);
+}
+.action-warn {
+  color: #7a4a00;
+}
+.action-reason .icon,
+.action-warn .icon {
+  display: inline;
+  vertical-align: -3px;
+}
+.cost-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cost-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: rgb(27 16 54 / 14%);
+  font-size: max(13px, 0.85em);
+  white-space: nowrap;
+}
+
+/* ---------- Energy switch ---------- */
+.energy-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.energy-switch {
+  position: relative;
+  flex: none;
+  width: 84px;
+  height: 48px;
+  padding: 0;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper-3);
+  box-shadow: inset 0 3px 0 rgb(27 16 54 / 18%);
+  cursor: pointer;
+  transition: background var(--dur) ease;
+}
+.energy-toggle.is-on .energy-switch {
+  background: var(--energy);
+}
+.energy-switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.energy-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 3px 0 var(--ink);
+  transition: left var(--dur) var(--ease-spring);
+}
+.energy-toggle.is-on .energy-knob {
+  left: 39px;
+}
+.energy-toggle-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.energy-toggle-text span {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+.energy-toggle-text small {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+/* ---------- Shield ---------- */
+.shield-stepper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.shield-cells {
+  display: flex;
+  gap: var(--sp-2);
+}
+.shield-cell {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  box-shadow: 0 3px 0 var(--ink);
+  cursor: pointer;
+}
+.shield-cell.is-on {
+  background: color-mix(in srgb, var(--shield) 55%, var(--paper));
+}
+.shield-cell .is-dim {
+  --icon-color: var(--paper-3);
+}
+.shield-cell.is-locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.shield-count {
+  flex-basis: 100%;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+/* ---------- Upgrade ---------- */
+.upgrade-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: var(--outline-sm) dashed var(--ink-3);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--science) 10%, var(--paper));
+  font-size: var(--fs-md);
+}
+.upgrade-box.is-max {
+  border-style: solid;
+  text-align: center;
+}
+.upgrade-next {
+  line-height: 1.35;
+}
+.upgrade-next .icon {
+  display: inline;
+  vertical-align: -4px;
+}
+.golden-rule {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+}
+
+/* ---------- Storm level ---------- */
+.rad-level {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px 2px 6px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.rad-level.is-level-1 {
+  background: color-mix(in srgb, var(--warn) 45%, var(--paper));
+}
+.rad-level.is-level-2 {
+  background: color-mix(in srgb, var(--food) 70%, var(--paper));
+}
+.rad-level.is-level-3 {
+  background: color-mix(in srgb, var(--danger) 55%, var(--paper));
+}
+.rad-level.is-unknown {
+  border-style: dashed;
+  color: var(--ink-2);
+}
+
+/* ---------- Farm ---------- */
+.plots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: var(--sp-2);
+}
+.plot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-3);
+  text-align: center;
+  font-size: var(--fs-sm);
+  line-height: 1.25;
+}
+.plot small {
+  font-size: inherit;
+}
+.plot-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.plot-progress {
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+.plot-progress i {
+  display: block;
+  height: 100%;
+  background: var(--farm);
+  transition: width var(--dur) ease;
+}
+
+/* ---------- Rover zones ---------- */
+.zones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--sp-2);
+}
+.zone-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px var(--sp-3);
+  align-items: center;
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--rover) 14%, var(--paper));
+}
+.zone-card.is-locked {
+  border-style: dashed;
+  background: var(--paper-3);
+}
+.zone-num {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-sm);
+  background: var(--rover);
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+}
+.zone-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+.zone-loot {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+.zone-card .action,
+.zone-card .zone-locked {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Missions ---------- */
+.mission {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--science) 12%, var(--paper));
+}
+.mission-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.mission-head strong {
+  flex: 1;
+  font-family: var(--font-display);
+}
+.mission-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: var(--science-ink);
+}
+.mission-needs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.need-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: var(--fs-sm);
+}
+.need-chip.is-ok {
+  background: color-mix(in srgb, var(--ok) 35%, var(--paper));
+}
+
+/* ---------- Forecast and the link with Earth ---------- */
+.forecast {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: var(--sp-2);
+}
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--info) 14%, var(--paper));
+}
+.forecast-day small {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.25;
+}
+.prediction {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+.signal-link {
+  position: relative;
+  height: 76px;
+  overflow: hidden;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-md);
+  background: radial-gradient(ellipse at 50% 50%, #2d1466, #170b3b);
+}
+.signal-link .earth,
+.signal-link .moon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+}
+.signal-link .earth {
+  left: 14px;
+  width: 44px;
+  height: 44px;
+  background: radial-gradient(circle at 35% 30%, #9fe1ff 0 15%, #2e7de0 45%, #14407a 80%);
+  box-shadow: 0 0 16px rgb(74 163 255 / 60%);
+}
+.signal-link .moon {
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle at 35% 30%, #f2f4fa, #9aa3b8 70%, #6b7288);
+}
+.signal-link .pulse {
+  position: absolute;
+  top: 50%;
+  left: 60px;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--aurora-1);
+  box-shadow: 0 0 14px var(--aurora-1);
+  animation: signal-travel var(--travel, 1.3s) linear forwards;
+}
+@keyframes signal-travel {
+  to {
+    left: calc(100% - 56px);
+  }
+}
+.signal-link .timer {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--aurora-1);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+}
+
+/* ---------- Bed: night checklist ---------- */
+.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--sp-2);
+}
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper-2);
+  font-size: var(--fs-md);
+  line-height: 1.3;
+}
+.checklist li.ok {
+  background: color-mix(in srgb, var(--ok) 22%, var(--paper));
+}
+.checklist li.bad {
+  background: color-mix(in srgb, var(--danger) 18%, var(--paper));
+}
+.checklist li.unknown {
+  background: color-mix(in srgb, var(--warn) 28%, var(--paper));
+}
+.checklist .ck-icon {
+  flex: none;
+  display: grid;
+}
+
+/* ---------- Real data of the day ---------- */
+.real-data {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--energy) 16%, var(--paper));
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.real-data-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.real-data a,
+.cause-line a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* a comfortable touch target for the source links */
+  font-size: var(--fs-sm);
+}
+.donki-quote {
+  padding-left: var(--sp-3);
+  border-left: 3px solid var(--ink-3);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  font-style: italic;
+}
+
+/* ---------- Life support: energy tokens ---------- */
+.energy-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.token {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: var(--energy);
+  box-shadow: 0 3px 0 var(--ink);
+}
+.token-antenna {
+  background: var(--antenna);
+}
+.token-farm {
+  background: var(--farm);
+}
+.token-shield {
+  background: var(--shield);
+}
+.ok-text {
+  color: var(--ok-ink);
+}
+.cause-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+.night-note {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--bed) 22%, var(--paper));
+  font-size: var(--fs-sm);
+}
+

@@ -1,0 +1,353 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Main menu: a fixed grid (top bar / content / footer) that never scrolls. The animated sky is drawn once by
+ * <BackdropProvider>, so this screen paints no background of its own.
+ *
+ * What shrinks, in order, as the viewport gets smaller (every threshold is a height unless noted):
+ *   < 820 px   (or a single column) the photo on the first card disappears
+ *   < 800 px   the logo scales down to 70 %
+ *   < 680 px   the logo disappears
+ *   <= 600 px  (width) one column; the secondary card texts go away
+ *   <= 560 px  (height, landscape) two columns: the title on the left, three one-line cards on the right
+ */
+.menu {
+  grid-template-rows: auto minmax(min-content, 1fr) auto; /* the middle never shrinks below its content: the screen scrolls instead */
+  gap: var(--sp-3);
+}
+.menu-top {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-2);
+}
+.menu-main {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 2.4vh, 24px);
+}
+
+/* ---------- Hero ---------- */
+.menu-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  text-align: center;
+  max-width: 760px;
+}
+.logo-box {
+  --s: 1;
+  position: relative;
+  width: calc(170px * var(--s));
+  height: calc(120px * var(--s));
+}
+.logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 170px;
+  height: 120px;
+  transform: scale(var(--s));
+  transform-origin: 0 0;
+}
+.logo-sun {
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  width: 78px;
+  height: 78px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #fff3b0, var(--energy) 55%, var(--horizon));
+  box-shadow: 0 0 40px rgb(255 201 60 / 70%);
+  animation: menu-sun-pulse 4s ease-in-out infinite;
+}
+@keyframes menu-sun-pulse {
+  50% {
+    box-shadow: 0 0 60px rgb(255 201 60 / 95%);
+  }
+}
+.logo-moon {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  width: 92px;
+  height: 92px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 40%, var(--moon-lo) 0 9px, transparent 10px),
+    radial-gradient(circle at 66% 66%, var(--moon-lo) 0 12px, transparent 13px),
+    radial-gradient(circle at 38% 30%, var(--moon-hi), var(--moon) 60%, var(--moon-lo));
+  box-shadow: inset -12px -10px 20px rgb(27 16 54 / 35%);
+}
+.logo-astro {
+  position: absolute;
+  left: 62px;
+  top: 30px;
+  width: 52px;
+  animation: menu-float 3.4s ease-in-out infinite;
+}
+@keyframes menu-float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.menu-title {
+  font-size: var(--fs-hero);
+}
+.menu-sub {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-lg);
+  color: var(--aurora-1);
+}
+.menu-lead {
+  max-width: 56ch;
+  font-size: var(--fs-md);
+  color: var(--fg-dim);
+}
+
+/* ---------- Destinations ---------- */
+.dest-grid {
+  width: min(1120px, 100%);
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 2vmin, 20px);
+}
+.dest {
+  --tone: var(--energy);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--r-xl);
+}
+.dest::before {
+  content: '';
+  flex: none;
+  height: 12px;
+  background: var(--tone);
+  border-bottom: var(--outline) solid var(--ink);
+}
+.dest-moon {
+  --tone: var(--energy);
+}
+.dest-live {
+  --tone: var(--tag-live);
+}
+.dest-mars {
+  --tone: var(--rover);
+}
+.dest.is-soon {
+  background: var(--paper-3);
+}
+.dest-photo {
+  display: none; /* only on tall screens, see the media query below */
+  flex: none;
+  height: clamp(90px, 15vh, 150px);
+  background-image: var(--photo);
+  background-size: cover;
+  background-position: center 55%;
+  border-bottom: var(--outline) solid var(--ink);
+}
+.dest-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4) var(--sp-4);
+}
+.dest-body h2 {
+  font-size: var(--fs-xl);
+  color: var(--ink);
+}
+.dest-text {
+  color: var(--ink-2);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.dest-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.dest-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.dest-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.photo-credit {
+  display: none; /* shown with the photo */
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  line-height: 1.25;
+}
+.photo-credit a {
+  color: var(--link-ink);
+}
+.photo-credit .icon {
+  display: inline;
+  vertical-align: -3px;
+}
+
+/* ---------- Footer ---------- */
+.menu-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  /* the AI watermark sits in the bottom-left corner: keep the footer to its right */
+  padding-left: max(var(--ai-badge-w), env(safe-area-inset-left));
+}
+.menu-foot-actions {
+  display: flex;
+  gap: var(--sp-3);
+  margin-left: auto;
+}
+.privacy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fg-dim);
+  font-size: var(--fs-sm);
+  max-width: 44ch;
+}
+.privacy .icon {
+  flex: none;
+}
+
+/* ---------- Settings window ---------- */
+.settings-group {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+}
+.settings-group legend {
+  padding: 0 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+.suit-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+.suit-swatch {
+  display: grid;
+  place-items: center;
+  width: var(--touch);
+  height: var(--touch);
+  padding: 0;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 3px 0 var(--ink);
+  cursor: pointer;
+}
+.suit-swatch.is-on {
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 5px 0 var(--ink);
+}
+.settings-check {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: var(--touch);
+  cursor: pointer;
+}
+.settings-check input {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  accent-color: var(--science-ink);
+}
+.settings-note {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+.settings-warning {
+  font-size: var(--fs-lg);
+}
+
+/* ---------- Tall and wide screens (three columns): the photo of the first card ---------- */
+@media (min-height: 820px) and (min-width: 861px) {
+  .dest-photo {
+    display: block;
+  }
+  .photo-credit {
+    display: block;
+  }
+}
+/* Medium and short screens: the logo shrinks, then goes away */
+@media (max-height: 799px) {
+  .logo-box {
+    --s: 0.7;
+  }
+}
+@media (max-height: 679px) {
+  .logo-box {
+    display: none;
+  }
+  .dest-body {
+    padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  }
+}
+
+/* Tablets in portrait and narrow windows: the three cards stack only when they cannot stay side by side */
+@media (max-width: 860px) {
+  .dest-grid {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(520px, 100%);
+  }
+  /* three stacked cards need the height: the cards already say what the lead says */
+  .logo-box,
+  .menu-lead {
+    display: none;
+  }
+}
+
+/* Phones in portrait: one column, and the cards keep only what is needed to choose */
+@media (max-width: 600px) {
+  .menu-lead,
+  .dest-live .dest-text,
+  .dest-mars .dest-text {
+    display: none;
+  }
+  .menu-sub {
+    font-size: var(--fs-md);
+  }
+  .dest-body h2 {
+    font-size: var(--fs-lg);
+  }
+  .menu-foot {
+    padding-left: var(--ai-badge-w);
+  }
+  .menu-foot-actions .btn {
+    padding-inline: 0.8em;
+  }
+}
+

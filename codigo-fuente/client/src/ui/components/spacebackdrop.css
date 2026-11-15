@@ -1,0 +1,298 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * <SpaceBackdrop>: full-screen animated sky (fixed, behind everything, never clickable).
+ * Only transform and opacity are animated. Moods cross-fade through opacity.
+ */
+.backdrop {
+  --earth-size: clamp(70px, 15vmin, 190px);
+  --horizon-h: clamp(46px, 12vh, 130px);
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-backdrop);
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+.backdrop > * {
+  position: absolute;
+}
+
+.bd-sky {
+  inset: 0;
+  background:
+    radial-gradient(ellipse 85% 38% at 50% 104%, rgb(255 138 91 / 32%), transparent 70%),
+    linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 56%, var(--sky-low) 100%);
+}
+.bd-tint {
+  inset: 0;
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+.bd-tint-storm {
+  background:
+    radial-gradient(ellipse 95% 75% at 0% 0%, rgb(255 61 110 / 50%), transparent 72%),
+    linear-gradient(180deg, transparent 35%, rgb(255 61 110 / 22%));
+}
+.bd-tint-night {
+  background: linear-gradient(180deg, rgb(6 2 22 / 72%), rgb(10 4 30 / 48%));
+}
+.mood-storm .bd-tint-storm,
+.mood-night .bd-tint-night {
+  opacity: 1;
+}
+
+/* The Sun, glowing at the top-left edge */
+.bd-sun {
+  left: -22vmin;
+  top: -22vmin;
+  width: 64vmin;
+  height: 64vmin;
+  transition: opacity 900ms ease;
+}
+.bd-sun-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 236 170 / 95%) 0 16%, rgb(255 201 60 / 52%) 27%, rgb(255 138 91 / 20%) 48%, transparent 70%);
+  animation: bd-breathe 7s ease-in-out infinite;
+  transition: opacity 900ms ease;
+}
+.bd-sun-glow.is-storm {
+  background: radial-gradient(circle, rgb(255 214 140 / 95%) 0 16%, rgb(255 110 60 / 62%) 30%, rgb(255 61 110 / 28%) 52%, transparent 72%);
+  opacity: 0;
+  animation-duration: 2.4s;
+}
+.bd-sun-core {
+  position: absolute;
+  left: 31%;
+  top: 31%;
+  width: 38%;
+  height: 38%;
+  border-radius: 50%;
+  background: #ffe38a;
+  border: 5px solid rgb(255 201 60 / 70%);
+}
+.mood-storm .bd-sun-glow.is-storm {
+  opacity: 1;
+}
+.mood-night .bd-sun {
+  opacity: 0.12;
+}
+
+/* Parallax star layers: tiled dots that drift left at different speeds (the tile repeats seamlessly). */
+.bd-stars {
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: calc(100% + var(--tile));
+  background-repeat: repeat;
+  background-size: var(--tile) var(--tile);
+  animation:
+    bd-drift var(--speed) linear infinite,
+    bd-glimmer var(--glimmer) ease-in-out infinite;
+  will-change: transform;
+}
+.bd-stars.is-far {
+  --tile: 337px;
+  --speed: 280s;
+  --glimmer: 9s;
+  opacity: 0.6;
+  background-image:
+    radial-gradient(1px 1px at 0px 310px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 246px 180px, #d8ccff 99%, transparent),
+    radial-gradient(1.2px 1.2px at 254px 183px, #d8ccff 99%, transparent),
+    radial-gradient(1px 1px at 275px 82px, #d8ccff 99%, transparent),
+    radial-gradient(1.2px 1.2px at 235px 18px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 311px 272px, #d8ccff 99%, transparent),
+    radial-gradient(1px 1px at 311px 232px, #d8ccff 99%, transparent),
+    radial-gradient(1px 1px at 307px 306px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 282px 112px, #fff7e8 99%, transparent),
+    radial-gradient(1.2px 1.2px at 144px 99px, #d8ccff 99%, transparent),
+    radial-gradient(1px 1px at 246px 296px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 189px 171px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 306px 18px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 224px 312px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 137px 96px, #fff7e8 99%, transparent),
+    radial-gradient(1px 1px at 112px 179px, #fff7e8 99%, transparent);
+}
+.bd-stars.is-mid {
+  --tile: 523px;
+  --speed: 190s;
+  --glimmer: 5.2s;
+  opacity: 0.85;
+  background-image:
+    radial-gradient(1.5px 1.5px at 0px 234px, #fff7e8 99%, transparent),
+    radial-gradient(1.7px 1.7px at 450px 214px, #ffeccc 99%, transparent),
+    radial-gradient(1.5px 1.5px at 247px 147px, #d8ccff 99%, transparent),
+    radial-gradient(1.7px 1.7px at 74px 199px, #d8ccff 99%, transparent),
+    radial-gradient(1.5px 1.5px at 200px 44px, #d8ccff 99%, transparent),
+    radial-gradient(1.5px 1.5px at 310px 290px, #fff7e8 99%, transparent),
+    radial-gradient(1.5px 1.5px at 161px 416px, #fff7e8 99%, transparent),
+    radial-gradient(1.5px 1.5px at 301px 373px, #ffeccc 99%, transparent),
+    radial-gradient(1.5px 1.5px at 464px 273px, #ffeccc 99%, transparent),
+    radial-gradient(1.7px 1.7px at 502px 168px, #fff7e8 99%, transparent),
+    radial-gradient(1.7px 1.7px at 375px 423px, #fff7e8 99%, transparent),
+    radial-gradient(1.7px 1.7px at 87px 418px, #d8ccff 99%, transparent);
+}
+.bd-stars.is-near {
+  --tile: 761px;
+  --speed: 120s;
+  --glimmer: 3.6s;
+  background-image:
+    radial-gradient(2.1px 2.1px at 0px 19px, #ffeccc 99%, transparent),
+    radial-gradient(2.1px 2.1px at 193px 27px, #ffeccc 99%, transparent),
+    radial-gradient(2.4px 2.4px at 475px 379px, #d8ccff 99%, transparent),
+    radial-gradient(2.1px 2.1px at 85px 605px, #fff7e8 99%, transparent),
+    radial-gradient(2.4px 2.4px at 332px 135px, #ffeccc 99%, transparent),
+    radial-gradient(2.4px 2.4px at 458px 606px, #ffeccc 99%, transparent),
+    radial-gradient(2.1px 2.1px at 351px 91px, #fff7e8 99%, transparent),
+    radial-gradient(2.4px 2.4px at 432px 97px, #ffeccc 99%, transparent),
+    radial-gradient(2.4px 2.4px at 28px 70px, #ffeccc 99%, transparent);
+}
+.bd-stars.is-mid {
+  animation-delay: 0s, -2s;
+}
+
+.bd-sparkles {
+  inset: 0 0 var(--horizon-h) 0;
+}
+.bd-sparkle {
+  position: absolute;
+  animation: ss-twinkle 3.2s ease-in-out infinite;
+}
+
+/* Shooting stars: long cycles, visible for a moment only. */
+.bd-shooting {
+  width: clamp(80px, 14vmin, 170px);
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #fff7e8, rgb(255 247 232 / 0%));
+  opacity: 0;
+  animation: bd-shoot 13s linear infinite;
+}
+.bd-shooting.is-1 {
+  left: 70%;
+  top: 9%;
+  animation-delay: 4s;
+}
+.bd-shooting.is-2 {
+  left: 44%;
+  top: 4%;
+  animation-duration: 19s;
+  animation-delay: 11s;
+}
+
+/* Storm: particle streaks flying out from the Sun's corner. */
+.bd-streaks {
+  inset: 0;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+.mood-storm .bd-streaks {
+  opacity: 1;
+}
+.bd-streak {
+  position: absolute;
+  left: -6vmax;
+  width: clamp(50px, 9vmin, 120px);
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgb(255 201 60 / 0%), #ffd56b 70%, #fff7e8);
+  opacity: 0;
+  animation: bd-streak 3s linear infinite;
+  animation-play-state: paused;
+}
+.mood-storm .bd-streak {
+  animation-play-state: running;
+}
+
+/* The Earth, low on the lunar horizon, slowly turning */
+.bd-earth {
+  right: 8vw;
+  bottom: calc(var(--horizon-h) - var(--earth-size) * 0.32);
+  width: var(--earth-size);
+  height: var(--earth-size);
+  animation: bd-bob 9s ease-in-out infinite;
+}
+.bd-earth-land {
+  animation: bd-turn 70s linear infinite;
+}
+.bd-horizon {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--horizon-h);
+}
+
+@keyframes bd-drift {
+  to {
+    transform: translate3d(calc(-1 * var(--tile)), 0, 0);
+  }
+}
+@keyframes bd-glimmer {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes bd-breathe {
+  50% {
+    transform: scale(1.06);
+  }
+}
+@keyframes bd-turn {
+  to {
+    transform: translateX(-352px);
+  }
+}
+@keyframes bd-bob {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes bd-shoot {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(-24deg) scaleX(0.3);
+  }
+  1.5% {
+    opacity: 1;
+  }
+  6% {
+    opacity: 0;
+    transform: translate3d(-34vmax, 15vmax, 0) rotate(-24deg) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-34vmax, 15vmax, 0) rotate(-24deg) scaleX(1);
+  }
+}
+@keyframes bd-streak {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--a));
+  }
+  12% {
+    opacity: 0.95;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--a));
+  }
+}
+
+/* Reduced motion: a still sky (no drifting, twinkling, turning or shooting). */
+@media (prefers-reduced-motion: reduce) {
+  .backdrop *,
+  .backdrop *::before,
+  .backdrop *::after {
+    animation: none !important;
+  }
+}
+html.reduced-motion .backdrop *,
+html.reduced-motion .backdrop *::before,
+html.reduced-motion .backdrop *::after {
+  animation: none !important;
+}

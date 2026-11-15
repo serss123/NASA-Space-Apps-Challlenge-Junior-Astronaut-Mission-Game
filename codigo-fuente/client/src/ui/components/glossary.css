@@ -1,0 +1,99 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* Glossary words (<Term>) and the paper pill that explains them. */
+
+/* A technical word: coloured, underlined and clickable. The colour follows the surface (--term-color). */
+.term {
+  display: inline;
+  margin: 0;
+  padding: 0 2px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--term-color);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 3px;
+  text-decoration-color: currentColor;
+  text-underline-offset: 4px;
+  cursor: help;
+  transition: background-color var(--dur-fast) ease;
+}
+.term:hover,
+.term.is-open {
+  background: color-mix(in srgb, var(--term-color) 18%, transparent);
+  text-decoration-style: solid;
+}
+.term:focus-visible {
+  outline-offset: 1px;
+}
+
+/* The pill (a Popover) */
+.glossary-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--fs-lg);
+}
+.glossary-modal .modal-head h2::first-letter {
+  text-transform: uppercase;
+}
+.glossary-pill-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.glossary-pill-emoji {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper-2);
+  font-size: 1.6rem;
+  line-height: 1;
+  box-shadow: var(--shadow-hard-sm);
+}
+.glossary-pill-term {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  line-height: 1.15;
+  color: var(--science-ink);
+}
+/* Only the first letter in capitals ("Cráter en sombra permanente", not "Cráter En Sombra...") */
+.glossary-pill-term::first-letter {
+  text-transform: uppercase;
+}
+.glossary-pill-close.btn {
+  --btn-lift: 3px;
+}
+.glossary-pill-def {
+  font-weight: 700;
+  line-height: 1.4;
+}
+.glossary-pill-example {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: var(--outline-sm) dashed var(--ink-3);
+  border-radius: var(--r-sm);
+  background: var(--paper-2);
+  font-weight: 700;
+}
+.glossary-pill-example .icon {
+  margin-top: 1px;
+}
+.glossary-pill-src {
+  margin-top: 10px;
+  font-size: var(--fs-xs);
+  color: var(--ink-2);
+}

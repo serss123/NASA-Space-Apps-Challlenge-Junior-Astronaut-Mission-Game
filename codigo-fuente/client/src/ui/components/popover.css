@@ -1,0 +1,45 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/* <Popover>: a paper sticker bubble with an arrow pointing at its anchor. */
+.popover {
+  position: fixed;
+  z-index: var(--z-popover);
+  width: min(340px, calc(100vw - 20px));
+  padding: 14px 16px;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  box-shadow:
+    var(--shadow-hard),
+    var(--shadow-soft);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+  animation: ss-pop-in 240ms var(--ease-spring) both;
+}
+.popover::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--arrow-x) - 9px);
+  width: 16px;
+  height: 16px;
+  background: var(--paper);
+  border: var(--outline) solid var(--ink);
+  border-right: 0;
+  border-bottom: 0;
+  border-radius: 4px 0 0 0;
+}
+.popover.is-bottom::before {
+  top: -10px;
+  transform: rotate(45deg);
+}
+.popover.is-top::before {
+  bottom: -10px;
+  transform: rotate(225deg);
+}
+html.reduced-motion .popover {
+  animation: ss-fade-in 120ms ease-out both !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .popover {
+    animation: ss-fade-in 120ms ease-out both !important;
+  }
+}

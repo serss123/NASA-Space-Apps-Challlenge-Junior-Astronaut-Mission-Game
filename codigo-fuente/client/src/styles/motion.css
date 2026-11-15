@@ -1,0 +1,251 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Motion kit (docs/DESIGN.md section 2.3): never static, never noisy.
+ * Only transform and opacity are animated (cheap on school laptops).
+ * Keyframes use the "ss-" prefix so they never clash with v1 names.
+ *
+ *   .anim-pop-in    spring entrance (<= 350 ms)      .anim-float     slow up-and-down bob (ambient)
+ *   .anim-bounce-in bouncy entrance for new items    .anim-wiggle    short wiggle (attention)
+ *   .anim-shake     shake once (something was lost)  .anim-twinkle   star twinkle (ambient)
+ *   .anim-fade-in   plain fade                       .anim-breathe   slow scale pulse (ambient)
+ *   .anim-spin      slow full turn (ambient)         .stagger        children enter one by one, 40 ms apart
+ *
+ * Everything stops under prefers-reduced-motion and html.reduced-motion (see base.css and the end of this file).
+ */
+
+@keyframes ss-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes ss-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+  }
+}
+@keyframes ss-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  78% {
+    transform: scale(0.95);
+  }
+}
+@keyframes ss-float {
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes ss-wiggle {
+  20% {
+    transform: rotate(-8deg);
+  }
+  40% {
+    transform: rotate(7deg);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+  80% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes ss-shake {
+  15%,
+  55% {
+    transform: translateX(-6px);
+  }
+  35%,
+  75% {
+    transform: translateX(6px);
+  }
+  90% {
+    transform: translateX(-2px);
+  }
+}
+@keyframes ss-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.7);
+  }
+}
+@keyframes ss-breathe {
+  50% {
+    transform: scale(1.06);
+  }
+}
+@keyframes ss-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ss-squash {
+  40% {
+    transform: scale(1.12, 0.88);
+  }
+  70% {
+    transform: scale(0.96, 1.05);
+  }
+}
+@keyframes ss-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(42px);
+  }
+}
+@keyframes ss-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-42px);
+  }
+}
+@keyframes ss-confetti {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) scale(var(--s, 1)) rotate(var(--rot, 180deg));
+  }
+}
+
+.anim-fade-in {
+  animation: ss-fade-in var(--dur) var(--ease-out) both;
+}
+.anim-pop-in {
+  animation: ss-pop-in 320ms var(--ease-spring) both;
+}
+.anim-bounce-in {
+  animation: ss-bounce-in 520ms var(--ease-out) both;
+}
+.anim-float {
+  animation: ss-float 3.6s ease-in-out infinite;
+}
+.anim-wiggle {
+  animation: ss-wiggle 600ms ease-in-out both;
+}
+.anim-shake {
+  animation: ss-shake 480ms ease-in-out both;
+}
+.anim-twinkle {
+  animation: ss-twinkle 2.8s ease-in-out infinite;
+}
+.anim-breathe {
+  animation: ss-breathe 4s ease-in-out infinite;
+}
+.anim-spin {
+  animation: ss-spin 40s linear infinite;
+}
+.anim-squash {
+  animation: ss-squash 360ms var(--ease-out) both;
+}
+
+/* Children enter one by one, 40 ms apart (set --i on a child to choose its step yourself). */
+.stagger > * {
+  animation: ss-pop-in 320ms var(--ease-spring) both;
+  animation-delay: calc(var(--stagger-step, 40ms) * var(--i, 0));
+}
+.stagger > :nth-child(2) {
+  --i: 1;
+}
+.stagger > :nth-child(3) {
+  --i: 2;
+}
+.stagger > :nth-child(4) {
+  --i: 3;
+}
+.stagger > :nth-child(5) {
+  --i: 4;
+}
+.stagger > :nth-child(6) {
+  --i: 5;
+}
+.stagger > :nth-child(7) {
+  --i: 6;
+}
+.stagger > :nth-child(8) {
+  --i: 7;
+}
+.stagger > :nth-child(9) {
+  --i: 8;
+}
+.stagger > :nth-child(10) {
+  --i: 9;
+}
+.stagger > :nth-child(11) {
+  --i: 10;
+}
+.stagger > :nth-child(n + 12) {
+  --i: 11;
+}
+
+/* <Confetti>: a layer above everything (never clickable) and its pieces, little stars flying out from the origin. */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-popover);
+  overflow: hidden;
+  pointer-events: none;
+}
+.confetti-piece {
+  position: absolute;
+  width: var(--size, 16px);
+  height: var(--size, 16px);
+  pointer-events: none;
+  animation: ss-confetti var(--life, 900ms) var(--ease-out) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Reduced motion: no ambient loops and no movement at all for these helpers. */
+@media (prefers-reduced-motion: reduce) {
+  .anim-pop-in,
+  .anim-bounce-in,
+  .anim-float,
+  .anim-wiggle,
+  .anim-shake,
+  .anim-twinkle,
+  .anim-breathe,
+  .anim-spin,
+  .anim-squash,
+  .stagger > *,
+  .confetti-piece {
+    animation: none !important;
+  }
+  .confetti-piece {
+    display: none;
+  }
+}
+html.reduced-motion .anim-pop-in,
+html.reduced-motion .anim-bounce-in,
+html.reduced-motion .anim-float,
+html.reduced-motion .anim-wiggle,
+html.reduced-motion .anim-shake,
+html.reduced-motion .anim-twinkle,
+html.reduced-motion .anim-breathe,
+html.reduced-motion .anim-spin,
+html.reduced-motion .anim-squash,
+html.reduced-motion .stagger > *,
+html.reduced-motion .confetti-piece {
+  animation: none !important;
+}
+html.reduced-motion .confetti-piece {
+  display: none;
+}

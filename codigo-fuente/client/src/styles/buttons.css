@@ -1,0 +1,206 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Chunky toy buttons: thick ink outline, flat fill with one cel-shade step and a hard ink shadow.
+ * They lift on hover and squash when pressed. Every button is at least 48 px tall (touch target).
+ *
+ *   .btn                 base (paper)          .btn-sm / .btn-lg / .btn-xl   sizes
+ *   .btn-primary         sun yellow            .btn-block                    full width
+ *   .btn-secondary       paper                 .btn-icon                     round, icon only (needs aria-label)
+ *   .btn-ghost           outline (on the sky or on paper: follows --fg)
+ *   .btn-danger · .btn-science · .btn-warn (legacy)
+ *
+ * Put an <Icon> first inside the button; it scales with the font (1.35em).
+ */
+.btn {
+  --btn-bg: var(--paper);
+  --btn-ink: var(--ink);
+  --btn-line: var(--ink);
+  --btn-shadow: var(--ink);
+  --btn-lift: 5px;
+  --icon-fill: var(--paper);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-width: var(--touch);
+  min-height: 52px;
+  padding: 0.55em 1.15em;
+  border: var(--outline) solid var(--btn-line);
+  border-radius: var(--r-md);
+  background: var(--btn-bg);
+  /* one cel-shade step: a darker band at the bottom and a soft highlight at the top */
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 32%) 0 28%, transparent 28% 72%, rgb(27 16 54 / 12%) 72% 100%);
+  color: var(--btn-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-md);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  cursor: pointer;
+  box-shadow: 0 var(--btn-lift) 0 var(--btn-shadow);
+  transform: translateY(0);
+  transition:
+    transform var(--dur-fast) var(--ease-spring),
+    box-shadow var(--dur-fast) var(--ease-out),
+    filter var(--dur-fast) ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn > .icon {
+  flex: none;
+  width: 1.35em;
+  height: 1.35em;
+}
+@media (hover: hover) {
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 calc(var(--btn-lift) + 2px) 0 var(--btn-shadow);
+    filter: brightness(1.04) saturate(1.05);
+  }
+}
+.btn:active:not(:disabled),
+.btn.is-pressed {
+  transform: translateY(calc(var(--btn-lift) - 1px)) scale(1.03, 0.94);
+  box-shadow: 0 1px 0 var(--btn-shadow);
+  transition-duration: 60ms;
+}
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  cursor: not-allowed;
+  filter: grayscale(0.7) opacity(0.6);
+  transform: none;
+  box-shadow: 0 2px 0 var(--btn-shadow);
+}
+.btn:focus-visible {
+  outline-offset: 4px;
+  border-radius: var(--r-md);
+}
+
+/* Variants */
+.btn-primary {
+  --btn-bg: var(--energy);
+}
+.btn-secondary {
+  --btn-bg: var(--paper);
+}
+.btn-danger {
+  --btn-bg: var(--danger);
+  --icon-fill: var(--paper);
+}
+.btn-science {
+  --btn-bg: #b79bff;
+}
+.btn-warn {
+  --btn-bg: var(--warn);
+}
+/* Ghost: outline only. On the dark sky it is light; inside paper surfaces (--fg = ink) it turns ink. */
+.btn-ghost {
+  --btn-bg: rgb(255 247 232 / 8%);
+  --btn-ink: var(--fg);
+  --btn-line: var(--fg);
+  --btn-shadow: rgb(10 4 30 / 55%);
+  background-image: none;
+}
+.paper .btn-ghost,
+.on-paper .btn-ghost,
+.modal .btn-ghost,
+.popover .btn-ghost {
+  --btn-bg: transparent;
+  --btn-shadow: rgb(27 16 54 / 35%);
+}
+
+/* Sizes */
+.btn-sm {
+  --btn-lift: 4px;
+  min-height: var(--touch);
+  padding: 0.4em 0.85em;
+  font-size: var(--fs-sm);
+  border-radius: var(--r-sm);
+}
+.btn-lg {
+  --btn-lift: 6px;
+  min-height: 60px;
+  padding: 0.6em 1.4em;
+  font-size: var(--fs-lg);
+  border-radius: var(--r-lg);
+}
+.btn-xl {
+  --btn-lift: 7px;
+  min-height: 72px;
+  padding: 0.6em 1.7em;
+  font-size: var(--fs-xl);
+  border-radius: var(--r-xl);
+}
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+/* Round icon-only button: always give it an aria-label (and a title for mouse users). */
+.btn.btn-icon,
+.btn.btn-round {
+  width: 52px;
+  min-width: 52px;
+  height: 52px;
+  min-height: 52px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: var(--fs-md);
+}
+.btn.btn-icon > .icon {
+  width: 26px;
+  height: 26px;
+}
+.btn.btn-icon.btn-sm {
+  width: var(--touch);
+  min-width: var(--touch);
+  height: var(--touch);
+  min-height: var(--touch);
+}
+.btn.btn-icon.btn-sm > .icon {
+  width: 24px;
+  height: 24px;
+}
+.btn.btn-icon.btn-lg {
+  width: 64px;
+  min-width: 64px;
+  height: 64px;
+  min-height: 64px;
+}
+.btn.btn-icon.btn-lg > .icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* LEGACY (remove after v2): inner icon span and cost chip used by v1 panels and the Rover. */
+.btn .btn-icon {
+  font-size: 1.3em;
+  line-height: 1;
+}
+.btn .btn-cost {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: rgb(27 16 54 / 12%);
+  font-size: 0.85em;
+}
+
+/* A row of buttons that wraps; on phones the primary one stretches. */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+}
+@media (max-width: 600px), (max-height: 500px) {
+  .btn-row > .btn-primary {
+    flex: 1 1 auto;
+  }
+}

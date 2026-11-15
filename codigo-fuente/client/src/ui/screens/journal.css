@@ -1,0 +1,218 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * Discovery Journal. It lives inside the Modal body (a flex column), so the root takes the height the modal gives it and
+ * every inner level uses min-height: 0. Each tab shows ALL its cards in columns inside one scroll area (.scroll-y):
+ * as many as fit are visible at once, the rest are one scroll away. The min-height is a floor for hosts without <Modal fill>.
+ */
+.journal {
+  flex: 1 1 auto;
+  min-height: min(420px, 62dvh);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  color: var(--ink);
+}
+.journal-progress {
+  flex: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+}
+.journal-progress strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+.journal-meter {
+  flex: 1 1 140px;
+  max-width: 320px;
+  height: 18px;
+  overflow: hidden;
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--paper-3);
+}
+.journal-meter i {
+  display: block;
+  height: 100%;
+  background: var(--science);
+  transition: width var(--dur) var(--ease-out);
+}
+.journal-tabs {
+  flex: 1;
+  min-height: 0;
+}
+.journal-panel {
+  min-height: 0;
+}
+.journal-panel-inner {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.journal-heading {
+  flex: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 var(--sp-3);
+}
+.journal-heading h3 {
+  font-size: var(--fs-xl);
+}
+.journal-about {
+  flex-basis: 100%;
+  font-size: var(--fs-sm);
+}
+.disc-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+.disc-stars .is-dim {
+  --icon-color: var(--paper-3);
+}
+
+/* ---------- Discovery cards: all of them, in columns ---------- */
+.disc-list {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+  align-content: start;
+  gap: var(--sp-3);
+  padding: 2px 4px 6px 2px;
+}
+.disc-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--science) 12%, var(--paper));
+  box-shadow: var(--shadow-hard-sm);
+}
+.disc-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+}
+.disc-emoji {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: var(--shadow-hard-sm);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.disc-head h3 {
+  flex: 1 1 10ch;
+  min-width: 0;
+  font-size: var(--fs-lg);
+}
+.disc-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--touch);
+  font-size: var(--fs-sm);
+}
+.disc-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.disc-sec {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+.disc-sec h4 {
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--science-ink);
+}
+.disc-sec.is-remember {
+  background: var(--energy);
+  border-style: dashed;
+}
+.disc-sec.is-remember h4 {
+  color: var(--ink);
+}
+.disc-card.is-locked {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--paper-3);
+  border-style: dashed;
+  color: var(--ink-2);
+}
+.disc-card.is-locked p {
+  font-size: var(--fs-md);
+}
+.disc-lock {
+  display: grid;
+  width: 48px;
+  height: 48px;
+}
+
+/* ---------- Words ---------- */
+.word-list {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  grid-auto-rows: 4rem;
+  align-content: start;
+  gap: 10px;
+  padding: 2px 4px 6px 2px;
+}
+.word-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+  padding: 0 var(--sp-3);
+  border: var(--outline-sm) solid var(--ink);
+  border-radius: var(--r-lg);
+  background: var(--paper-2);
+  box-shadow: 0 3px 0 var(--ink);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: left;
+  cursor: pointer;
+}
+.word-chip.is-seen {
+  background: color-mix(in srgb, var(--aurora-1) 35%, var(--paper));
+}
+.word-chip:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+.word-emoji {
+  flex: none;
+  font-size: 1.3rem;
+}
+.word-term {
+  flex: 1;
+  min-width: 0; /* long words wrap onto a second line: the text is never cut with "..." */
+}

@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+
+# Compilación del cliente (la genera `npm run build`) y versión de un solo archivo (`npm run build:portable`)
+client/dist/
+client/dist-portable/
+
+# Variables de entorno (el juego no necesita claves: DONKI de CCMC funciona sin clave)
+.env
+.env.*
+
+# Registros y sistema
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Nota: server/data/*.json y client/src/data/*.json SÍ se versionan:
+# son la copia ARCHIVO real (DONKI + RadLab) que hace jugable el juego sin conexión.

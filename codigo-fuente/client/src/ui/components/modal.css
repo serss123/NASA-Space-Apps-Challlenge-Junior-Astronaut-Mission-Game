@@ -1,0 +1,159 @@
+/* AI-assisted code: written with Claude (Anthropic) and reviewed by the team. See AI_USE.md. */
+/*
+ * <Modal>: a paper sticker window in three parts. The footer is always visible; the body scrolls only if its content does not fit.
+ * Sizes: sm 440 · md 580 · lg 800 · xl 1080 · full (the whole viewport minus the margins).
+ */
+.modal-backdrop {
+  --modal-margin: clamp(8px, 2.4vmin, 28px);
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(var(--modal-margin), env(safe-area-inset-top)) max(var(--modal-margin), env(safe-area-inset-right))
+    max(var(--modal-margin), env(safe-area-inset-bottom)) max(var(--modal-margin), env(safe-area-inset-left));
+  background: rgb(23 11 59 / 66%);
+  animation: ss-fade-in 160ms ease-out both;
+}
+.modal {
+  --tone: var(--energy);
+  --pad: clamp(12px, 2.2vmin, 22px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(var(--modal-w, 580px), 100%);
+  max-height: 100%;
+  border: var(--outline) solid var(--ink);
+  border-radius: var(--r-xl);
+  background: var(--paper);
+  box-shadow:
+    0 8px 0 var(--ink),
+    var(--shadow-soft);
+  outline: none;
+  animation: ss-modal-pop 320ms var(--ease-spring) both;
+}
+.modal-sm {
+  --modal-w: 440px;
+}
+.modal-md {
+  --modal-w: 580px;
+}
+.modal-lg {
+  --modal-w: 800px;
+}
+.modal-xl {
+  --modal-w: 1080px;
+}
+.modal-full {
+  --modal-w: 100%;
+  height: 100%;
+}
+/* fill: as tall as the viewport allows (for paged content that needs a definite height) */
+.modal-fill {
+  height: 100%;
+}
+
+.modal-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(var(--pad) * 0.8) var(--pad);
+  border-bottom: var(--outline) solid var(--ink);
+  border-radius: calc(var(--r-xl) - var(--outline)) calc(var(--r-xl) - var(--outline)) 0 0;
+  background: color-mix(in srgb, var(--tone) 24%, var(--paper));
+}
+.modal-head h2 {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  font-size: var(--fs-xl);
+  color: var(--ink);
+}
+.modal-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 8px;
+  border: var(--outline) solid var(--ink);
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow: var(--shadow-hard-sm);
+  font-size: 1.55rem;
+  line-height: 1;
+  transform: rotate(-6deg);
+}
+.modal-icon .icon {
+  width: 100%;
+  height: 100%;
+}
+.modal-close {
+  flex: none;
+}
+
+.modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Everything should fit one view, but when it does not the body scrolls: nothing is ever cut off. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--pad);
+}
+.modal-foot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+  padding: calc(var(--pad) * 0.75) var(--pad) calc(var(--pad) * 0.75 + 2px);
+  /* useAvoidAiBadge() sets --ai-avoid-left when the footer would sit under the AI badge */
+  padding-left: max(var(--pad), var(--ai-avoid-left, 0px));
+  border-top: var(--outline) solid var(--ink);
+  border-radius: 0 0 calc(var(--r-xl) - var(--outline)) calc(var(--r-xl) - var(--outline));
+  background: var(--paper-2);
+}
+
+@keyframes ss-modal-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+  }
+}
+
+/* Phones: tighter header, and the primary action takes the whole footer row. */
+@media (max-width: 600px), (max-height: 500px) {
+  .modal {
+    --pad: 10px;
+    border-radius: var(--r-lg);
+  }
+  .modal-head {
+    gap: 8px;
+    border-radius: calc(var(--r-lg) - var(--outline)) calc(var(--r-lg) - var(--outline)) 0 0;
+  }
+  .modal-head h2 {
+    font-size: var(--fs-lg);
+  }
+  .modal-icon {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+    font-size: 1.2rem;
+  }
+  .modal-foot {
+    border-radius: 0 0 calc(var(--r-lg) - var(--outline)) calc(var(--r-lg) - var(--outline));
+  }
+  .modal-foot > .btn-primary {
+    flex: 1 1 auto;
+  }
+}
