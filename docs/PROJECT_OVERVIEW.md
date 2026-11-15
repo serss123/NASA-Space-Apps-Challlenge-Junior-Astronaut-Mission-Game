@@ -254,8 +254,7 @@ Storm level (archive): under 3× normal = Calm; 3–30× = Small storm; 30–150
 ## 7. Architecture and implementation
 
 ```
-codigo-fuente/
-├─ client/        React + Vite game (all rules run in the browser)
+client/           React + Vite game (all rules run in the browser)
 │  ├─ src/engine/     pure game engine: reducer, selectors, config, report, RNG, simulator (+ tests)
 │  ├─ src/ui/         screens, HUD, map, panels, reusable components (modal, tabs, icons, glossary…)
 │  ├─ src/content/    texts: discoveries, glossary, facts, missions, sources (es + en)
@@ -265,9 +264,11 @@ codigo-fuente/
 │  ├─ src/styles/     design tokens, base, buttons, motion
 │  ├─ src/data/       bundled May 2024 archive + live timeline loader
 │  └─ scripts/        single-file build, ui-check layout tool and its scenes
-├─ server/        Express: DONKI proxy with cache, timeline service, download scripts, tests
-├─ shared/        code used by both: DONKI → game translator, dates, Earth–Moon/Mars delay (+ tests)
-└─ docs/          DATA.md, DESIGN.md, GAME_DESIGN.md, this overview
+server/           Express: DONKI proxy with cache, timeline service, download scripts, tests
+shared/           code used by both: DONKI → game translator, dates, Earth–Moon/Mars delay (+ tests)
+docs/             DATA.md, DESIGN.md, GAME_DESIGN.md, this overview
+.github/          GitHub Actions workflow for GitHub Pages
+index.html        self-contained game snapshot; Pages rebuilds it from the source
 ```
 
 **Key implementation decisions**
@@ -309,7 +310,11 @@ What is **not** verified by automated checks: the feel of the game (difficulty b
 
 ---
 
-## 10. How to run it
+## 10. Hosting and development
+
+GitHub Pages is the public hosting target. Enable **Settings → Pages → Build and deployment → GitHub Actions**; the workflow in `.github/workflows/deploy-pages.yml` builds the portable HTML and publishes it at `https://<github-user>.github.io/<repository-name>/`. Pages serves only static files, so it does not run the Express API. The archive is bundled, and the live mission can request DONKI directly from the browser.
+
+For local development and backend work:
 
 ```bash
 npm run setup           # install root, server and client dependencies
@@ -325,10 +330,9 @@ Add `?lang=en` to the address to start in English.
 
 ---
 
-## 11. Limits and what comes next
+## 11. Limits and future work
 
 - **Simplifications are declared:** one astronaut instead of a crew; "night" is a sleep schedule because the south pole has almost permanent low sun; the shield uses energy so the child can decide each night; the Rover jumps like a video game while real rovers drive slowly. All 16 are listed in the game.
 - **The live mission depends on the real Sun.** With a calm Sun the game is easier, and it says so.
 - **Mars is not playable yet.** It is announced with a real calculated delay; a Mars base (version 2) would make "deciding without waiting for Earth" the central rule.
-- **Pending work in the project:** translate the remaining Spanish identifiers and comments in the code to English with JSDoc on the engineering trade-offs; a judges-oriented README with the SI table; final packaging.
 - **Ideas:** a teacher guide with classroom activities and a printable worksheet; a shared class mission (the engine already supports seeds); a Mars base mission.

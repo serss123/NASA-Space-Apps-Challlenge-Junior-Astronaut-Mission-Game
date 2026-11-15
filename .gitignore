@@ -17,3 +17,6 @@ Thumbs.db
 
 # Nota: server/data/*.json y client/src/data/*.json SÍ se versionan:
 # son la copia ARCHIVO real (DONKI + RadLab) que hace jugable el juego sin conexión.
+
+# GitHub Actions Pages build output
+/dist/
