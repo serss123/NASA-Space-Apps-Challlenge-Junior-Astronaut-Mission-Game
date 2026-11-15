@@ -45,6 +45,8 @@ The game also works **without the server**: the real May 2024 archive is bundled
 
 **Play without installing anything:** `npm run build:portable` packs the code, styles, fonts, the NASA photo and the May 2024 data into a single HTML file (about 1.6 MB) that opens with a double click, with no server and no install — the easiest way to share the game. The archive mission works offline; the live mission needs internet (it asks DONKI directly) and, without it, falls back to the archive and says so.
 
+With index.html we can get a static version of the game just to check its funcionalities.
+
 ## What it teaches
 
 Kids live the engineering trade-offs NASA mission planners face, using the challenge's five topics:
@@ -138,10 +140,12 @@ AI tools were used and are declared in **[AI_USE.md](AI_USE.md)**.
 ## Team
 
 Team **"La Magma 1"** — NASA Space Apps Challenge 2026, Salamanca (Spain).
+
 Jesús Alejandro González González
 Ricardo Guerra Carreño
 Sergio Martín Sánchez
-Adrián Moreira Fernández 
+Adrián Moreira Fernández
+
 ---
 
 ## Resumen en español
