@@ -142,8 +142,11 @@ AI tools were used and are declared in **[AI_USE.md](AI_USE.md)**.
 Team **"La Magma 1"** — NASA Space Apps Challenge 2026, Salamanca (Spain).
 
 Jesús Alejandro González González
+
 Ricardo Guerra Carreño
+
 Sergio Martín Sánchez
+
 Adrián Moreira Fernández
 
 ---
